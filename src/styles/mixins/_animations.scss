@@ -1,3 +1,6 @@
+@mixin pull ($direction){
+    float: $direction;
+}
 
 @mixin keyframe ($animation_name) {
     @-webkit-keyframes #{$animation_name} {
@@ -17,11 +20,12 @@
     }
 }
 
-@mixin animation ($delay, $duration, $animation, $timing, $direction: forward, $fillmode: forward) {
+@mixin animation ($delay, $duration, $animation, $timing, $iteration: 1, $direction: forward, $fillmode: forward) {
     -webkit-animation-delay: $delay;
     -webkit-animation-duration: $duration;
     -webkit-animation-name: $animation;
     -webkit-animation-timing-function: $timing;
+    -webkit-animation-iteration-count: $iteration;
     -webkit-animation-fill-mode: $fillmode;
     -webkit-animation-direction: $direction;
 
@@ -29,6 +33,7 @@
     -moz-animation-duration: $duration;
     -moz-animation-name: $animation;
     -moz-animation-timing-function: $timing;
+    -moz-animation-iteration-count: $iteration;
     -moz-animation-fill-mode: $fillmode;
     -moz-animation-direction: $direction;
 
@@ -36,8 +41,27 @@
     animation-duration: $duration;
     animation-name: $animation;
     animation-timing-function: $timing;
+    animation-iteration-count: $iteration;
     animation-fill-mode: $fillmode;
     animation-direction: $direction;
+}
+// box-shadow: 1px 1px 5px 1px white inset, -1px -1px 5px 1px white inset ;
+@include keyframe (glowing-button) {
+    0% {
+        box-shadow: 0px 0px 0px 0px white inset, -0px -0px 0px 0px white inset ;
+    }
+    25% {
+        box-shadow: .25px .25px 6px 1.25px white inset, -.25px -.25px 6px 1.25px white inset ;
+    }
+    50% {
+        box-shadow: 3px 3px 6px 2px white inset, -3px -3px 6px 2px white inset ;
+    }
+    75% {
+        box-shadow: .25px .25px 6px 1.25px white inset, -.25px -.25px 6px 1.25px white inset
+    }
+    100% {
+        box-shadow: 0px 0px 0px 0px white inset, -0px -0px 0px 0px white inset ;
+    }
 }
 
 @include keyframe(animation-slide-out-up) {
