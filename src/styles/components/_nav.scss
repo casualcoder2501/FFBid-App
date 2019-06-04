@@ -1,10 +1,11 @@
 .nav-color{
     background-color: $nav-color
 }
-.login-btn {
-    margin-right: 9px;
-    border-radius: 6px !important;
-}
+
 .animation-slide-in-left{
+    @include animation(0, 1s, animation-slide-in-left, ease-out)
+}
+
+.animation-slide-in-down{
     @include animation(0, 1s, animation-slide-in-down, ease-out)
 }
