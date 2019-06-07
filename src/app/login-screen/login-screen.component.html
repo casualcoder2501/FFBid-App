@@ -1,0 +1,41 @@
+<div class="login">
+    <div class="login-modal box-shadow animation-slide-in-down">
+        <!--  -->
+        <form *ngIf="userLogin">
+            <div class="form-group justify-content-end">
+                <label for="userName">User Name</label>
+                <input required [(ngModel)]="userName" type="text" class="form-control" name="userName" aria-describedby="emailHelp" placeholder="User Name">
+                <small id="emailHelp" class="form-text text-muted">{{rules.emailRule}}</small>
+            </div>
+            <div *ngIf="createAccount" class="form-group justify-content-end">
+                <label for="exampleInputEmail1">Email address</label>
+                <input required [(ngModel)]="email" type="email" class="form-control" name="userEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">{{rules.emailRule}}</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input required [(ngModel)]="password" type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div *ngIf="createAccount" class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{department}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a (click)="setDepartment(department)" *ngFor="let department of departments; let index = i" class="dropdown-item" href="#">{{department}}</a>
+                    </div>
+                </div>
+            <div  class="btn-group pull-right">
+                <button *ngIf="!createAccount" (click)="createUserPage()" class="login-btn" type="button">
+                    <i class="material-icons md-24 md-light">account_box</i>Create Account
+                </button>
+                <button *ngIf="!createAccount" class="login-btn" (click)="loginUser()" type="button">
+                    Login
+                </button>
+                <button *ngIf="createAccount" style="width: 100%" class="login-btn" (click)="createUser()" type="button">
+                    Create
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>

@@ -1,0 +1,36 @@
+.pull-right {@include pull(right)};
+.pull-left {@include pull(left)};
+.login-modal {
+    background-color: rgb(196, 196, 202);
+    position: relative;
+    height: $modal-height *1.1;
+    width: $modal-height * .75;
+    border-radius: 20px;
+ 
+    padding: 20px;
+    z-index: 99;
+    overflow: hidden;
+    margin: auto;
+    margin-top: 15vh;
+}
+.alert-error {
+    background-color: rgb(226, 99, 99);
+    border-color: black;
+    color: white;
+    font-weight: bold;
+    -moz-box-shadow: 4px 4px 3.5px 1px black;
+    -o-box-shadow: 4px 4px 3.5px 1px black;
+    -webkit-box-shadow:4px 4px 3.5px 1px black;
+    box-shadow: 4px 4px 3.5px 1px black;
+}
+
+.alert-good {
+    background-color: rgb(9, 175, 50);
+    border-color: black;
+    color: white;
+    font-weight: bold;
+    -moz-box-shadow: 4px 4px 3.5px 1px black;
+    -o-box-shadow: 4px 4px 3.5px 1px black;
+    -webkit-box-shadow:4px 4px 3.5px 1px black;
+    box-shadow: 4px 4px 3.5px 1px black;
+}
