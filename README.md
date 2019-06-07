@@ -2,9 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
 
-This project is underconstruction and available to the public for education purposes and example code only.
+This project is underconstruction and available to the public for education purposes and example code only. FFBid-App uses a MEAN stack and uses a proxy to make requests to the attached server application.
+
+Please see development branch for current version.
 
 Happy coding!
+
 
 ## Development server
 
