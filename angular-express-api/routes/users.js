@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var app = express();
-let assert = require('assert');
+var assert = require('assert');
 
 insertUser = function (db, userName, password, email, department, callback) {
   const collection = db.collection('Users');
@@ -30,6 +30,36 @@ findUser = function (db, userName, email, callback) {
   })
 
 }
+
+ validateLogin = function (db, userName, password, callback) {
+  const collection = db.collection('Users');
+
+  collection.find({ $and: [{ user_name: userName }, { pass_word: password }] }, {email:0,pass_word:0}).toArray((err, doc) => {
+    assert.equal(err, null);
+    console.log(doc[0])
+    callback(doc[0])
+  })
+    
+  
+  }
+  
+
+
+router.post('/login', function (req, res, next) {
+  const body = req.body;
+  const userName = body.userName;
+  const password = body.password;
+  const db = req.app.locals.db;
+  validateLogin(db, userName, password, function (doc) {
+    if (doc === false || doc === ''|| doc == undefined || doc == null){
+      console.log('no record')
+      res.json('no record')
+    } else {
+      console.log('found')
+      res.json({userName: doc.user_name, department: doc.department})
+    }
+  })
+})
 
 router.post('/', function (req, res, next) {
   const body = req.body;
@@ -68,5 +98,3 @@ router.post('/', function (req, res, next) {
 
 module.exports = router;
 
-// mongodb+srv://jgamino:<password>@cluster0-c2fb4.mongodb.net/test?retryWrites=true
-// mongodb+srv://jgamino:<password>@cluster0-c2fb4.mongodb.net/test
