@@ -1,8 +1,6 @@
-import { Component, OnInit, ɵCodegenComponentFactoryResolver } from '@angular/core';
-import { ToastService } from '../toast/toast.service';
-import { HttpClient } from '@angular/common/http';
-
-
+import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../login.service';
+import { shareReplay } from 'rxjs/operators';
 @Component({
   selector: 'app-login-screen',
   templateUrl: './login-screen.component.html',
@@ -10,27 +8,26 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginScreenComponent implements OnInit {
   // tslint:disable-next-line: max-line-length
-  regEmail = new RegExp(/^([a-zA-Z0-9])+\.?([a-zA-Z0-9])*\.?([a-zA-Z0-9])*\.?@([a-zA-z]{2,})*\.+([a-zA-z]{2,})+\.?([a-zA-z]{2,})*/);
-  email = '';
-  unSafeEmail = new RegExp(/[<>{}/&*]/);
+
   rules = {
     emailRule: 'No special characters ></&{}*'
   };
-  userLogin = false;
-  createAccount = true;
+  userLogin = true;
+  createAccount = false;
   adminLogin = false;
-  constructor(private toast: ToastService, private http: HttpClient) { }
-  adminUserName = '';
-  adminPassword = '';
+  email = '';
   department = 'Departments';
   departments = ['FF_Fire', 'ABQ_Fire'];
   responseData = '';
-  createUserName = '';
-  createPassword = '';
-  createEmail = '';
+  userName = '';
+  password = '';
+
+  constructor(private login: LoginService) { }
+
 
 
   ngOnInit() {
+
   }
 
   setDepartment(department: string) {
@@ -38,60 +35,36 @@ export class LoginScreenComponent implements OnInit {
     console.log(this.department)
   }
 
-  validateEmail() {
-    const validatedEmail = this.regEmail.test(this.email);
-    const specialChars = this.unSafeEmail.test(this.email);
-    if (validatedEmail) {
-      console.log('email is valid');
-      if (specialChars) {
-        this.toast.showToast('error', 'email address contains escaped characters', 2500)
-        console.log('unsafe email');
-        alert('special characters');
-      } else {
-        console.log('email clean')
-        alert('clean');
-      }
-    }
-
-    console.log(validatedEmail);
-    console.log(specialChars);
-    if (this.email.length === 0 || this.email === null || !validatedEmail) {
-      alert('Please enter email');
-    }
+  createUser() {
+    console.log('create button')
+    this.login.createUser({
+      userName: this.userName,
+      password: this.password,
+      email: this.email,
+      department: this.department
+    });
+    shareReplay(1);
+    this.createAccount = false;
   }
 
-  createUser() {
+  loginUser() {
+    this.login.loginUser({
+      userName: this.userName,
+      password: this.password
+    });
+    shareReplay(1);
+  }
+
+
+  createUserPage() {
     this.createAccount = true;
 
   }
 
-  async create() {
-
-    await this.http.post('/api/v1/users', {
-      userName: this.createUserName,
-      password: this.createPassword,
-      email: this.createEmail,
-      department: this.department
-    }).toPromise().then((value: string) => {
-      this.responseData = value;
-      console.log(value);
-    })
-
-    switch (true) {
-      case this.responseData === '':
-        this.toast.showToast('error', 'an error has occured', 2500);
-        break;
-      case this.responseData === 'empty':
-        this.toast.showToast('error', 'fields must not be empty', 2500);
-        break;
-      case this.responseData === 'exists':
-        this.toast.showToast('error', 'user name or email already in use', 2500);
-        break;
-        case this.responseData === 'added':
-        this.toast.showToast('good', 'successfully added user!', 2500);
-        break;
-    }
-
+  adminPage() {
+    this.adminLogin = true;
   }
+
+
 }
 
