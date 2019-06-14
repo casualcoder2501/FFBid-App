@@ -1,6 +1,4 @@
-@mixin pull ($direction){
-    float: $direction;
-}
+
 
 @mixin keyframe ($animation_name) {
     @-webkit-keyframes #{$animation_name} {
