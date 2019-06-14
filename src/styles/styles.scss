@@ -1,9 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "@material/drawer/mdc-drawer";
+@import "@material/card/mdc-card";
+@import "@material/list/mdc-list";
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 @import '../styles/variables/colors.scss';
 @import 'variables/size.scss';
 @import 'mixins/animations.scss';
 @import 'components/global.scss';
+@import 'components/home.scss';
 @import 'components/nav.scss';
 @import 'components/modal.scss';
 @import 'components/login.scss';

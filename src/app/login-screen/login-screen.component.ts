@@ -30,6 +30,17 @@ export class LoginScreenComponent implements OnInit {
 
   }
 
+  submitForm(event: KeyboardEvent){
+    if ( event.key === 'Enter') {
+      if (this.createAccount){
+        this.createUser();
+      } else {
+        this.loginUser();
+      }
+    }
+
+  }
+
   setDepartment(department: string) {
     this.department = department;
     console.log(this.department)

@@ -25,24 +25,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private department: string;
 
   constructor(private idle: IdleService, private activeRoute: ActivatedRoute, private router: Router) {
-
+    
   }
 
 
   async ngOnInit() {
-    const isLoggedIn = sessionStorage.getItem('loggedIn');
+    
+    // const isLoggedIn = sessionStorage.getItem('loggedIn');
 
-    if (isLoggedIn === 'true') {
-      await this.catchUser();
-      console.log(sessionStorage.getItem('time'))
-    } else {
-      this.router.navigate(['']);
-    }
+    // if (isLoggedIn === 'true') {
+    //   await this.catchUser();
+    //   console.log(sessionStorage.getItem('time'))
+    // } else {
+    //   this.router.navigate(['']);
+    // }
   }
 
   ngAfterViewInit() {
     this.idle.checkForIdle();
-
+    
   }
 
   catchUser() {
