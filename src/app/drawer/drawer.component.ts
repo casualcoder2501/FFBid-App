@@ -21,7 +21,7 @@ export class DrawerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mdcDrawer = MDCDrawer.attachTo((document.querySelector('.mdc-drawer')));
     this.drawer.isOpen.subscribe((data) => {
       this.mdcDrawer.open = data;
-    })
+    });
 
 
   }

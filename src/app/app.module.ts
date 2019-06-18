@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DrawerComponent } from './drawer/drawer.component';
 import { StationComponent } from './station/station.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { HeroComponent } from './hero/hero.component';
 
 
 
@@ -24,7 +25,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HomeComponent,
     DrawerComponent,
     StationComponent,
-    DashboardComponent
+    DashboardComponent,
+    HeroComponent
   ],
   imports: [
     BrowserModule,

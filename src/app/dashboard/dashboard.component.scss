@@ -1,0 +1,12 @@
+.grid-dash {
+display: grid;
+grid-template-columns: 3fr 3fr 3fr 3fr;
+padding: 20px;
+width:100vw;
+}
+.dash-title {
+    margin:auto !important
+}
+.dash-tile {
+    margin: 20px;
+}
