@@ -1,3 +1,4 @@
+@import '../mixins/main-mixins';
 html,
 body {
     margin: 0px;
@@ -9,11 +10,8 @@ i {
     vertical-align: middle;
     margin-right: 5px;
 }
-.box-shadow{
-    -moz-box-shadow: 4px 4px 3.5px 1px black;
-    -o-box-shadow: 4px 4px 3.5px 1px black;
-    -webkit-box-shadow:4px 4px 3.5px 1px black;
-    box-shadow: 4px 4px 3.5px 1px black;
+.box-shadow {
+    @include boxShadow(4px, 4px, 3.5px, 1px, black)
 }
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }

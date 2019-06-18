@@ -1,3 +1,12 @@
-<p>
-  dashboard works!
-</p>
+<app-hero></app-hero>
+<div class="grid-dash">
+<div *ngFor="let tile of tiles; let i = index" class="mdc-card demo-card dash-tile">
+  <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
+    <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" [ngStyle]="{'background-image': tile.image}"></div>
+    <div class="demo-card__primary dash-title">
+      <h2 class="demo-card__title mdc-typography mdc-typography--headline4">{{tile.title}}</h2>    
+    <h3 class="demo-card__secondary mdc-typography mdc-typography--headline6">{{tile.description}}</h3>
+  </div>
+</div>
+</div>
+</div>

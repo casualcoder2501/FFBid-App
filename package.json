@@ -2,6 +2,8 @@
   "name": "ffbid-app",
   "version": "0.0.0",
   "scripts": {
+    "localServer": "nodemon C:/Users/jtgam/Desktop/FFBid-App/angular-express-api/app.js",
+    "serve": "ng serve --proxy-config proxy.conf.json",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
