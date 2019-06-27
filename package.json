@@ -2,7 +2,6 @@
   "name": "ffbid-app",
   "version": "0.0.0",
   "scripts": {
-    "localServer": "nodemon C:/Users/jtgam/Desktop/FFBid-App/angular-express-api/app.js",
     "serve": "ng serve --proxy-config proxy.conf.json",
     "ng": "ng",
     "start": "ng serve",
@@ -25,7 +24,9 @@
     "express": "^4.17.0",
     "fstream": "^1.0.12",
     "jquery": "^3.4.1",
+    "jwt-decode": "^2.2.0",
     "material-components-web": "^2.3.0",
+    "moment": "^2.24.0",
     "mongodb": "^3.2.5",
     "ngx-bootstrap": "^4.1.1",
     "node-gyp": "^4.0.0",

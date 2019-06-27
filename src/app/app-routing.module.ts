@@ -21,10 +21,6 @@ const routes: Routes = [
       {
         path: 'station',
         component: StationComponent
-      },
-      {
-        path: 'logout',
-        component: LoginScreenComponent
       }
     ]
   }

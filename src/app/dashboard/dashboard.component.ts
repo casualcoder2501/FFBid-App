@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MDCRipple } from '@material/ripple';
-
+import {LoginService} from '../login.service';
 interface ITile {
   title: string;
   image: string;
