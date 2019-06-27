@@ -1,6 +1,6 @@
+let fs = require('fs');
 
-
-let url = `mongodb+srv://jgamino:Awalkinthepark7*@cluster0-c2fb4.mongodb.net`;
+let url = `${fs.readFileSync('./mongo.txt')}`;
 module.exports = {
     url
 }
