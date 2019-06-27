@@ -1,6 +1,7 @@
+let fs = require('fs');
 
+let url = `${fs.readFileSync('./mongo.txt')}`;
 
-let url = ``;
 module.exports = {
     url
 }
