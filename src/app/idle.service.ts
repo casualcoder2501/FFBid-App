@@ -15,7 +15,7 @@ export class IdleService {
   }
 
   checkForIdle() {
-    this.idleCounter = setInterval(this.idle, 10000);
+    this.idleCounter = setInterval(this.idle, 60000);
     window.onmousemove = () => {
       this.idleTime = 0;
       console.log(this.idleTime);
@@ -33,7 +33,7 @@ export class IdleService {
   idle = () => {
     this.idleTime = this.idleTime + 1;
     console.log(this.idleTime);
-    if (this.idleTime > 1) {
+    if (this.idleTime > 29) {
       sessionStorage.clear();
       this.router.navigate(['']);
       clearInterval(this.idleCounter);

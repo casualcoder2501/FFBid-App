@@ -2,19 +2,19 @@
     <div class="login-modal box-shadow animation-slide-in-down">
         <!--  -->
         <form *ngIf="userLogin">
-            <div class="form-group justify-content-end">
+            <div *ngIf="createAccount" class="form-group justify-content-end">
                 <label for="userName">User Name</label>
                 <input required [(ngModel)]="userName" type="text" class="form-control" name="userName" aria-describedby="emailHelp" placeholder="User Name">
-                <small id="emailHelp" class="form-text text-muted">{{rules.emailRule}}</small>
+                <small id="emailHelp" class="form-text text-muted">{{rules.safetyRule}}</small>
             </div>
-            <div *ngIf="createAccount" class="form-group justify-content-end">
+            <div *ngIf="userLogin" class="form-group justify-content-end">
                 <label for="exampleInputEmail1">Email address</label>
                 <input required [(ngModel)]="email" type="email" class="form-control" name="userEmail" aria-describedby="emailHelp" placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">{{rules.emailRule}}</small>
+                <small id="emailHelp" class="form-text text-muted">{{rules.safetyRule}}</small>
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input required [(ngModel)]="password" type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input required (keyup)="submitForm($event)" [(ngModel)]="password" type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
             </div>
             <div *ngIf="createAccount" class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,6 +33,9 @@
                 </button>
                 <button *ngIf="createAccount" style="width: 100%" class="login-btn" (click)="createUser()" type="button">
                     Create
+                </button>
+                <button *ngIf="createAccount" style="width: 100%" class="login-btn" (click)="cancel()" type="button">
+                    Cancel
                 </button>
             </div>
         </form>

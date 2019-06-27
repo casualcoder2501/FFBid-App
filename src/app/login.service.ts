@@ -1,27 +1,45 @@
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { tap, shareReplay } from 'rxjs/operators';
 import { ToastService } from './toast/toast.service';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, retry } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import {IdleService} from './idle.service';
+import { IdleService } from './idle.service';
+import { User, Token } from './user.model';
 
-export interface IUser {
-  userName?: string;
-  password?: string;
-  email?: string;
-  department?: string;
-}
+import * as jwt_decode from 'jwt-decode';
+import { IUser } from './user.model';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class LoginService {
+
+  // regular expressions to ensure that user input is of a valid format
+  // and test for unsafe characters. Rejects the form and shows alert if
+  // there are any unsafe characters or if the format requirements are not met.
+  // email format supports john123.smith7895.jingleheimer879@mail.box.com or at a minimum j@co.ed
+  // password is between 5 and 18 alpha numberic characters with at least 1 chosen special character
+  // unsafe characters are <>{}():;/[].  *& allowed in password
   regEmail = new RegExp(/^([a-zA-Z0-9])+\.?([a-zA-Z0-9])*\.?([a-zA-Z0-9])*\.?@([a-zA-z]{2,})*\.+([a-zA-z]{2,})+\.?([a-zA-z]{2,})*/);
   regPassword = new RegExp(/[a-zA-z0-9]{5,18}[!@#$%^&*]+/);
   regUserName = new RegExp(/[a-zA-z0-9]{3,}/);
-  unSafe = new RegExp(/[<>{}/&*]/);
+  unSafe = new RegExp(/[<>{}/&\*;:\[\]\(\)]/);
+  unSafePassword = new RegExp(/[<>/{}\[\]\(\).:;]/);
+
+  // user object stores the current user's userName and department is initially set
+  // to null. Final value obtained from JSON web token payload
+  user: IUser = {
+    userName: null,
+    department: null
+  };
+
+  // tslint:disable-next-line: max-line-length
+  constructor(private idle: IdleService, private toast: ToastService, private http: HttpClient, private router: Router) { }
+
+  // error handing function, not currently in use.
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message, error.error.timeStamp, error.error.type);
@@ -36,12 +54,11 @@ export class LoginService {
     );
   }
 
-
-  constructor(private idle: IdleService, private toast: ToastService, private http: HttpClient, private router: Router) { }
-
+  // calling this function clears the users session storage, removes event
+  // listeners for idle service and clears it's interval, and navigates user back to 
+  // login screen.
   logout() {
     sessionStorage.clear();
-    this.router.navigate(['']);
     window.onmousemove = () => {
       return null;
     };
@@ -52,24 +69,29 @@ export class LoginService {
       return null;
     };
     clearInterval(this.idle.idleCounter);
+    this.router.navigate(['']);
   }
 
 
-  async createUser(user: IUser) {
+  async createUser(user: User) {
+
+    // checking for format and unsafe characters from user input using regular expressions
     const validatedEmail = this.regEmail.test(user.email);
     const unSafeEmail = this.unSafe.test(user.email);
     const validPassword = this.regPassword.test(user.password);
     const validUserName = this.regUserName.test(user.userName);
     const unSafeUserName = this.unSafe.test(user.userName);
+    const unSafePassword = this.unSafePassword.test(user.password);
     console.log('safe email', unSafeEmail, 'valid password', validPassword, validUserName, unSafeUserName, validatedEmail);
-    
-    
-    // tslint:disable-next-line: max-line-length
-    if (user.userName == null || user.password == null || user.email == null || user.department == null || user.userName === '' || user.password === '' || user.email === '' || user.department === 'Department') {
+
+    // checks for empty user input
+    if (user.userName == null || user.password == null || user.email == null || user.department == null ||
+      user.userName === '' || user.password === '' || user.email === '' || user.department === 'Department') {
       this.toast.showToast('error', 'fields must not be empty please check your information and try again', 2500);
-    } else if (validPassword && validUserName && validatedEmail && unSafeEmail === false && unSafeUserName === false) {
-      console.log('success')
-      await this.http.post('/api/v1/users', {
+    } else if (validPassword && validUserName && validatedEmail &&
+      unSafeEmail === false && unSafeUserName === false && unSafePassword === false) {
+      console.log('success');
+      await this.http.post('/api/users', {
         userName: user.userName,
         password: user.password,
         email: user.email,
@@ -89,46 +111,96 @@ export class LoginService {
                 break;
               case value === 'added':
                 this.toast.showToast('good', 'successfully added user!', 2500);
-                sessionStorage.setItem('loggedIn', 'true');
-                this.router.navigate(['home', { user: user.userName, loggedIn: true }]);
+                sessionStorage.setItem('loggedIn', JSON.stringify(true));
+                sessionStorage.setItem('time', JSON.stringify(Date.now()));
+                this.router.navigate(['home']);
                 break;
             }
 
-          },
-          error => console.error(error)
+          }
         ),
-        catchError(this.handleError)
+        catchError(this.handleError),
+
       ).toPromise();
+    }
+    shareReplay(1);
+
+  }
+
+
+  isLoggedOut(): boolean {
+    return !this.isLoggedIn();
+  }
+
+  isLoggedIn(): boolean {
+    const expiresAt = sessionStorage.getItem('expires_at');
+    const expiration: number = JSON.parse(expiresAt);
+    const current: number = Math.round(Date.now() / 1000);
+    const expired = expiration < current;
+    console.log(expiration);
+    console.log(current);
+    console.log(expired);
+    if (expired || expiration === undefined || expiration === null) {
+      sessionStorage.clear();
+      return false;
+    } else {
+      return true;
     }
 
   }
 
-  async loginUser(user: IUser) {
-    if (user.userName == null || user.userName === '' || user.password == null || user.password === '') {
+  checkToken() {
+    if (this.isLoggedIn()) {
+
+      this.getCurrentUser();
+      return true;
+
+    } else {
+
+      this.logout();
+      return false;
+
+    }
+  }
+
+  getCurrentUser() {
+    const userInfo = jwt_decode(sessionStorage.getItem('id_token'));
+    this.user = {
+      userName: userInfo.userName,
+      department: userInfo.department
+    }
+  }
+
+  async loginUser(user: User) {
+    if (user.email == null || user.email === '' || user.password == null || user.password === '') {
       this.toast.showToast('error', 'fields must not be empty', 2500);
     } else {
-      await this.http.post('/api/v1/users/login', {
-        userName: user.userName,
+      await this.http.post('/api/users/login', {
+        email: user.email,
         password: user.password
 
       }).pipe(
         tap(
-          (resp: IUser & string) => {
-
+          (resp: Token & string) => {
+            console.log(resp);
             if (resp === 'no record') {
               this.toast.showToast('error', 'Credentials do not match our records', 2500)
             } else {
-              sessionStorage.setItem('loggedIn', 'true');
-              sessionStorage.setItem('time', Date.now().toString());
-              this.router.navigate(['home', { user: resp.userName, department: resp.department }]);
+              const decoded = jwt_decode(resp.id_token);
+              console.log(decoded);
+              const expiresAt = decoded.exp;
+              console.log(expiresAt);
+              sessionStorage.setItem('id_token', JSON.stringify(resp.id_token));
+              sessionStorage.setItem('expires_at', JSON.stringify(expiresAt));
+              this.router.navigate(['home']);
             }
 
           },
           error => console.error(error)
-        ),
-        catchError(this.handleError)
+        )
       ).toPromise();
     }
+    shareReplay(1);
   }
 
 
