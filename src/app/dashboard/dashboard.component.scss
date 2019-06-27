@@ -3,6 +3,7 @@ display: grid;
 grid-template-columns: 3fr 3fr 3fr 3fr;
 padding: 20px;
 width:100vw;
+overflow:scroll;
 }
 .dash-title {
     margin:auto !important

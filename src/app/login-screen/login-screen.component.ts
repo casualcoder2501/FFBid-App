@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
 import { shareReplay } from 'rxjs/operators';
+import {Router} from '@angular/router';
+import { NavigationEnd } from '@angular/router';
 @Component({
   selector: 'app-login-screen',
   templateUrl: './login-screen.component.html',
   styleUrls: ['./login-screen.component.scss']
 })
 export class LoginScreenComponent implements OnInit {
-  // tslint:disable-next-line: max-line-length
 
+
+  // stores the rules that are displayed to the user on the login form.
   rules = {
-    emailRule: 'No special characters ></&{}*'
+    safetyRule: 'No special characters ></&{}*'
   };
+
+
   userLogin = true;
   createAccount = false;
   adminLogin = false;
@@ -22,17 +27,23 @@ export class LoginScreenComponent implements OnInit {
   userName = '';
   password = '';
 
-  constructor(private login: LoginService) { }
+  constructor(private login: LoginService, private router: Router) { }
 
 
 
   ngOnInit() {
+    // checks if the token stored in local storage is still good.
+    // navigates to the dashboard if it is.
+    if (this.login.isLoggedIn()) {
+      this.router.navigate(['home']);
+    }
 
   }
 
-  submitForm(event: KeyboardEvent){
-    if ( event.key === 'Enter') {
-      if (this.createAccount){
+  // allows user to press the enter key to submit the login or user creation form.
+  submitForm(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (this.createAccount) {
         this.createUser();
       } else {
         this.loginUser();
@@ -60,7 +71,7 @@ export class LoginScreenComponent implements OnInit {
 
   loginUser() {
     this.login.loginUser({
-      userName: this.userName,
+      email: this.email,
       password: this.password
     });
     shareReplay(1);
@@ -75,7 +86,9 @@ export class LoginScreenComponent implements OnInit {
   adminPage() {
     this.adminLogin = true;
   }
-
+  cancel() {
+    this.createAccount = false;
+  }
 
 }
 
