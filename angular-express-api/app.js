@@ -13,19 +13,23 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
-
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+      res.status(401).send('invalid token...');
+    }
+  });
 app.use('/api/users', users);
 app.use('/api/stations', stations)
-app.get('/', (req, res, next) => {
-    res.send('Hello')
-})
 
+
+// connects to the mongo database and then shares that connection throughout
+// the application via the app.locals storage
 MongoClient.connect(mongoConfig.url, { poolSize: 15, useNewUrlParser: true, autoReconnect: true, numberOfRetries: 5 })
     .then(client => {
         const db = client.db('Departments');
         dbClient = client;
-        app.locals.db = db;
-        app.locals.client = client;
+        app.locals.db = db; // stores database connection
+        app.locals.client = client; // stores mongo client to change databases if need be
         console.log(app.locals.db);
         app.listen(port, () => console.info(`REST API running on port ${port}`));
     }).catch(error => console.error(error));

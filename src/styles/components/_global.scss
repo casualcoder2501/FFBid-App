@@ -3,7 +3,7 @@ html,
 body {
     margin: 0px;
     width:100vw;
-    height:100vh;
+    min-height: 100vh;
     padding: 0px;
 }
 i {
@@ -27,3 +27,8 @@ i {
 .hand:hover {
     cursor: move;
 }
+.full-height {
+    height: 100vh;
+    
+}
+
