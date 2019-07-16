@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { User, CUser } from '../user.model';
 import { LoginService } from '../login.service';
 
+
+// Hero image component used to display user greeting
 
 @Component({
   selector: 'app-hero',
@@ -17,6 +18,7 @@ export class HeroComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
   }
+
   ngAfterViewInit() {
 
   }

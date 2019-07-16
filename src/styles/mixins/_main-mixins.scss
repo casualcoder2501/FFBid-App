@@ -1,3 +1,5 @@
+@import 'animations';
+
 @mixin boxShadow ($horizontal:null, $vertical:null, $blur:null, $spread:null, $color:null, $inset:null){
         -moz-box-shadow: $horizontal $vertical $blur $spread $color $inset;
         -o-box-shadow: $horizontal $vertical $blur $spread $color $inset ;

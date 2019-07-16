@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { catchError, retry } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { IdleService } from './idle.service';
-import { User, Token } from './user.model';
+import { User, Token, CurrentUser } from './user.model';
 
 import * as jwt_decode from 'jwt-decode';
 import { IUser } from './user.model';
@@ -14,6 +14,9 @@ import { IUser } from './user.model';
 @Injectable({
   providedIn: 'root'
 })
+
+
+// service that controls the logic for user authentication, account creation, and login
 
 export class LoginService {
 
@@ -91,6 +94,8 @@ export class LoginService {
     } else if (validPassword && validUserName && validatedEmail &&
       unSafeEmail === false && unSafeUserName === false && unSafePassword === false) {
       console.log('success');
+      //
+      // making request to server
       await this.http.post('/api/users', {
         userName: user.userName,
         password: user.password,
@@ -101,18 +106,24 @@ export class LoginService {
         tap(_ => console.log('from tap')),
         tap(
 
-          (value: string) => {
+          // looks for the text string that is sent back by the server
+          (resp: Token & string) => {
             switch (true) {
-              case value === '':
+              case resp === '':
                 this.toast.showToast('error', 'an error has occured', 2500);
                 break;
-              case value === 'exists':
+              case resp === 'exists':
                 this.toast.showToast('error', 'user name or email already in use', 2500);
                 break;
-              case value === 'added':
+              case resp.status === 'added':
+                const decoded = jwt_decode(resp.id_token);
+                console.log(decoded);
+                const expiresAt = decoded.exp;
+                console.log(expiresAt);
+                sessionStorage.setItem('id_token', JSON.stringify(resp.id_token));
+                sessionStorage.setItem('expires_at', JSON.stringify(expiresAt));
                 this.toast.showToast('good', 'successfully added user!', 2500);
-                sessionStorage.setItem('loggedIn', JSON.stringify(true));
-                sessionStorage.setItem('time', JSON.stringify(Date.now()));
+
                 this.router.navigate(['home']);
                 break;
             }
@@ -131,15 +142,15 @@ export class LoginService {
   isLoggedOut(): boolean {
     return !this.isLoggedIn();
   }
-
+  // This function tests whether the current time stamp is greater than the
+  // stored expiration time stamp for the json web token and returns true if
+  // the token's expiration has not yet passed. Used to validate user session.
   isLoggedIn(): boolean {
     const expiresAt = sessionStorage.getItem('expires_at');
     const expiration: number = JSON.parse(expiresAt);
     const current: number = Math.round(Date.now() / 1000);
     const expired = expiration < current;
-    console.log(expiration);
-    console.log(current);
-    console.log(expired);
+
     if (expired || expiration === undefined || expiration === null) {
       sessionStorage.clear();
       return false;
@@ -149,7 +160,10 @@ export class LoginService {
 
   }
 
-  checkToken() {
+  // uses isLoggedIn to decide to  either set the current user from the stored token
+  // from the server when the page is loaded or send the user back to the login screen
+  // if their token has expired.
+  checkToken(): boolean {
     if (this.isLoggedIn()) {
 
       this.getCurrentUser();
@@ -169,6 +183,7 @@ export class LoginService {
       userName: userInfo.userName,
       department: userInfo.department
     }
+    console.log(this.user)
   }
 
   async loginUser(user: User) {
