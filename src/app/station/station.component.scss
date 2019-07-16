@@ -1,0 +1,13 @@
+.grid-station {
+    display: grid;
+    grid-template-columns: 3fr 3fr 3fr 3fr;
+    padding: 20px;
+    width:100vw;
+    overflow:auto;
+    }
+    .station-title {
+        margin:auto !important
+    }
+    .station-tile {
+        margin: 20px;
+    }

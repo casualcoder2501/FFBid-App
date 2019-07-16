@@ -13,7 +13,8 @@ import { DrawerComponent } from './drawer/drawer.component';
 import { StationComponent } from './station/station.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeroComponent } from './hero/hero.component';
-
+import {httpInterceptorProviders} from './http-interceptors/index';
+import { CreateStationComponent } from './create-station/create-station.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { HeroComponent } from './hero/hero.component';
     DrawerComponent,
     StationComponent,
     DashboardComponent,
-    HeroComponent
+    HeroComponent,
+    CreateStationComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,9 @@ import { HeroComponent } from './hero/hero.component';
     ToastModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    httpInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

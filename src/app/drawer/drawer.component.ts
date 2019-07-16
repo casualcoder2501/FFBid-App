@@ -11,14 +11,19 @@ import { LoginService } from '../login.service';
   styleUrls: ['./drawer.component.scss']
 })
 export class DrawerComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  // initialize drawer variable
   mdcDrawer;
+
   constructor(private drawer: DrawerService, private router: Router, private login: LoginService) { }
 
   ngOnInit() {
 
   }
   ngAfterViewInit() {
+    // initializes material design drawer implementation
     this.mdcDrawer = MDCDrawer.attachTo((document.querySelector('.mdc-drawer')));
+    // looks to drawer service Subject "isOpen" for open status
     this.drawer.isOpen.subscribe((data) => {
       this.mdcDrawer.open = data;
     });
@@ -26,10 +31,11 @@ export class DrawerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
   ngOnDestroy() {
+    // destroys drawer when component closed
     this.mdcDrawer.destroy();
 
   }
-
+  // provides logout functionality from "login" service
   logout() {
     this.login.logout();
     console.log('logged out')

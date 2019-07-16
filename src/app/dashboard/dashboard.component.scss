@@ -1,13 +1,51 @@
+@import 'mixins/main-mixins';
+
+.dash-container {
+  
+    height: 100%;
+
+}
+
 .grid-dash {
 display: grid;
 grid-template-columns: 3fr 3fr 3fr 3fr;
-padding: 20px;
-width:100vw;
-overflow:scroll;
+grid-template-rows: 5fr 5fr;
+grid-column-gap: 30px;
+grid-row-gap: 25px;
+padding: 25px;
+
 }
 .dash-title {
-    margin:auto !important
+    margin:auto !important;
+    text-align: center;
 }
+
+.mdc-card__media{
+    background-size: cover;
+    background-position: absolute;
+}
+
 .dash-tile {
-    margin: 20px;
+    @include boxShadow( 1px, 4px, 5px, black);
+    width: 100%;
+    
+    height: 100%;
+    
+}
+
+.dash-tile:hover {
+  color: blue;
+  
+}
+
+@media screen and (max-width: 700px){
+    .grid-dash {
+        grid-template-columns: 5fr 5fr;
+        grid-template-rows: 3fr 3fr 3fr 3fr;
+        color:red;
+    }
+    
+}
+body {
+    background-color: grey;
 }
