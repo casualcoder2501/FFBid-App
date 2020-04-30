@@ -23,7 +23,7 @@
     "core-js": "^2.5.4",
     "express": "^4.17.0",
     "fstream": "^1.0.12",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.14",
     "material-components-web": "^2.3.0",
