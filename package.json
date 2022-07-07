@@ -27,7 +27,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.14",
     "material-components-web": "^2.3.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.2.5",
     "ngx-bootstrap": "^4.1.1",
     "node-gyp": "^4.0.0",
